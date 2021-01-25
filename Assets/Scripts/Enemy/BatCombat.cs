@@ -7,7 +7,7 @@ using UnityEngine;
 public class BatCombat : Combat
 {
     private Animator _animator;
-    private EnemyAI _enemyAI;
+    // private EnemyAI _enemyAI;
     private Rigidbody2D _body;
     private static readonly int PlayDead = Animator.StringToHash("PlayDead");
     private static readonly int Hit = Animator.StringToHash("Hit");
@@ -16,7 +16,7 @@ public class BatCombat : Combat
     private void Start()
     {
         _animator = GetComponent<Animator>();
-        _enemyAI = GetComponent<EnemyAI>();
+        // _enemyAI = GetComponent<EnemyAI>();
         _body = GetComponent<Rigidbody2D>();
         enemyStats = Instantiate(baseStats);
         enemyStats.hitPoints = enemyStats.maxHitPoints;
@@ -49,7 +49,7 @@ public class BatCombat : Combat
         if (enemyStats.hitPoints <= 0)
         {
             isAlive = false;
-            _enemyAI.enabled = false;
+            // _enemyAI.enabled = false;
             _body.gravityScale = 1;
             _animator.SetBool(Dead, true);
             DropOnDeath();

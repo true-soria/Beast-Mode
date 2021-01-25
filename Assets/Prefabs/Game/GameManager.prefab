@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8458906448050136602}
   - component: {fileID: 8458906448050136601}
-  - component: {fileID: 8993551388575904478}
+  - component: {fileID: -4580925574440459714}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetFPS: 60
---- !u!114 &8993551388575904478
+--- !u!114 &-4580925574440459714
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -54,6 +54,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 8458906448050136600}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4bb0c579301d60b4a88f4895beef6eab, type: 3}
+  m_Script: {fileID: 11500000, guid: 7963e9fca40c2224985583842eba406d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

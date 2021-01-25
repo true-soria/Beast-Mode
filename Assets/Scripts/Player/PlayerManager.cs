@@ -18,26 +18,29 @@ public class PlayerManager : MonoBehaviour
     public static readonly int PerSlot = 3;
 
     public WeaponAim eyes;
+    public PlayerMovement movement;
+    public Mask equippedMask;
     [SerializeField] private PlayerEffects baseEffects;
     [SerializeField] private Mask[] maskPrefabs;
     [SerializeField] private GameObject displayHealthPrefab;
 
-    private PlayerMovement _movement;
 
     private Mask[,] _masks = new Mask[4,PerSlot];
     private int[] _currentMask = {-1, -1, -1, -1};
     private Dictionary<string, float> _tempBuffs = new Dictionary<string, float>();
-    private Mask _equippedMask;
     private PlayerEffects _playerEffects;
     private PlayerHealth _playerHealth;
 
+    private void Awake()
+    {
+        movement = GetComponent<PlayerMovement>();
+        equippedMask = eyes.gameObject.GetComponent<Mask>();
+    }
+
     void Start()
     {
-        _movement = GetComponent<PlayerMovement>();
-        eyes.movement = _movement;
-        _equippedMask = eyes.gameObject.GetComponent<Mask>();
         _playerEffects = Instantiate(baseEffects);
-        _movement.playerEffects = _playerEffects;
+        movement.playerEffects = _playerEffects;
         _playerHealth = gameObject.AddComponent<PlayerHealth>();
         _playerHealth.displayHealthPrefab = displayHealthPrefab;
         _playerHealth.playerEffects = _playerEffects;
@@ -48,7 +51,6 @@ public class PlayerManager : MonoBehaviour
             WeaponAim maskAim = spawnedMask.GetComponent<WeaponAim>();
             
             spawnedMask.transform.localPosition = new Vector3(maskAim._eyeDistance, 0, 0);
-            maskAim.movement = _movement;
             spawnedMask.weaponAim = maskAim;
             spawnedMask.playerEffects = _playerEffects;
             
@@ -133,7 +135,7 @@ public class PlayerManager : MonoBehaviour
         if (current < 0)
             return;
         
-        if (_equippedMask == _masks[direction, current])
+        if (equippedMask == _masks[direction, current])
         {
             int next = (current + 1) % PerSlot;
             while (next != current)
@@ -154,9 +156,9 @@ public class PlayerManager : MonoBehaviour
 
     private void EquipNewMask((int, int) newMaskIndex)
     {
-        _equippedMask.gameObject.SetActive(false);
+        equippedMask.gameObject.SetActive(false);
         _masks[newMaskIndex.Item1, newMaskIndex.Item2].gameObject.SetActive(true);
-        _equippedMask = _masks[newMaskIndex.Item1, newMaskIndex.Item2];
+        equippedMask = _masks[newMaskIndex.Item1, newMaskIndex.Item2];
     }
 
     private void RecalculateSlamEquipped()

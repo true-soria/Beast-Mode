@@ -23,7 +23,7 @@ public class PlayerMovement : MonoBehaviour
     private PlayerControls _controls;
     private PlayerManager _playerManager;
     
-    private Vector2 _lsMove;
+    public Vector2 move;
     private State _currentState = State.Air;
     private Vector3 _slideJump;
     private int _jumpsLeft;
@@ -53,17 +53,17 @@ public class PlayerMovement : MonoBehaviour
     {
         _controls = new PlayerControls();
 
-        _controls.Gameplay.A.performed += ctx => Jump();
-        _controls.Gameplay.RS.performed += ctx => Jump();
-        _controls.Gameplay.LB.performed += ctx => LeftDash();
-        _controls.Gameplay.RB.performed += ctx => RightDash();
-        _controls.Gameplay.LS.performed += ctx => Slam();
+        _controls.Gameplay.A.performed += ctx => ActionJump();
+        _controls.Gameplay.RS.performed += ctx => ActionJump();
+        _controls.Gameplay.LB.performed += ctx => ActionLeftDash();
+        _controls.Gameplay.RB.performed += ctx => ActionRightDash();
+        _controls.Gameplay.LS.performed += ctx => ActionSlam();
         _controls.Gameplay.LT.performed += ctx => StartHover();
         _controls.Gameplay.LT.canceled += ctx => StopHover();
         _controls.Gameplay.RT.performed += ctx => triggerHeld = true;
         _controls.Gameplay.RT.canceled += ctx => triggerHeld = false;
-        _controls.Gameplay.Move.performed += ctx => _lsMove = ctx.ReadValue<Vector2>();
-        _controls.Gameplay.Move.canceled += ctx => _lsMove = Vector2.zero;
+        _controls.Gameplay.Move.performed += ctx => move = ctx.ReadValue<Vector2>();
+        _controls.Gameplay.Move.canceled += ctx => move = Vector2.zero;
         _controls.Gameplay.Aim.performed += ctx => rsMove = ctx.ReadValue<Vector2>().normalized;
         _controls.Gameplay.Aim.canceled += ctx => rsMove = Vector2.zero;
         _controls.Gameplay.Right.performed += ctx => _playerManager.CycleRightMask();
@@ -87,10 +87,10 @@ public class PlayerMovement : MonoBehaviour
         _controls.Gameplay.Enable();
     }
     
-    // private void OnDisable()
-    // {
-    //     _controls.Gameplay.Disable();
-    // }
+    private void OnDisable()
+    {
+        _controls.Gameplay.Disable();
+    }
 
     void Start()
     {
@@ -169,9 +169,9 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void Jump()
+    public void ActionJump()
     {
-        Debug.Log("State at Jump: " + _currentState);
+        Debug.Log("State at ActionJump: " + _currentState);
         switch (_currentState)
         {
             case State.Air:
@@ -201,7 +201,7 @@ public class PlayerMovement : MonoBehaviour
                 _body.AddForce(Vector2.up * _jumpHeight, ForceMode2D.Impulse);
                 break;
             case State.Platform:
-                if (_lsMove.y < -0.9f)
+                if (move.y < -0.9f)
                     StartCoroutine(DropThroughPlatform());
                 else
                 {
@@ -229,7 +229,7 @@ public class PlayerMovement : MonoBehaviour
         _collisionBox.enabled = true;
     }
 
-    void LeftDash()
+    public void ActionLeftDash()
     {
         if (_dashesLeft > 0 && _currentState != State.Slamming)
         {
@@ -240,7 +240,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
     
-    void RightDash()
+    public void ActionRightDash()
     {
         if (_dashesLeft > 0 && _currentState != State.Slamming)
         {
@@ -271,7 +271,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void Slam()
+    public void ActionSlam()
     {
         if (_currentState == State.Air || _currentState == State.Floating)
         {
@@ -300,7 +300,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (_currentState != State.Sliding && _currentState != State.Slamming)
         {
-            float deltaX = _lsMove.x * _moveSpeed * Time.deltaTime;
+            float deltaX = move.x * _moveSpeed * Time.deltaTime;
             Vector2 movement = new Vector2(deltaX, _body.velocity.y);
             if (_currentState == State.Grounded || Mathf.Abs(_body.velocity.x) < Mathf.Abs(deltaX))
             {

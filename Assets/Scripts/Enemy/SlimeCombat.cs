@@ -6,7 +6,7 @@ using UnityEngine;
 public class SlimeCombat : Combat
 {
     private Animator _animator;
-    private runEnemyAI _enemyAI;
+    // private runEnemyAI _enemyAI;
     private Rigidbody2D _body;
     
     private static readonly int Hit = Animator.StringToHash("Hit");
@@ -16,7 +16,7 @@ public class SlimeCombat : Combat
     private void Start()
     {
         _animator = GetComponent<Animator>();
-        _enemyAI = GetComponent<runEnemyAI>();
+        // _enemyAI = GetComponent<runEnemyAI>();
         _body = GetComponent<Rigidbody2D>();
         enemyStats = Instantiate(baseStats);
         enemyStats.hitPoints = enemyStats.maxHitPoints;
@@ -44,7 +44,7 @@ public class SlimeCombat : Combat
         if (enemyStats.hitPoints <= 0)
         {
             isAlive = false;
-            _enemyAI.enabled = false;
+            // _enemyAI.enabled = false;
             _animator.SetBool(IsDead, true);
             DropOnDeath();
             StartCoroutine(Die());
