@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -19,6 +20,9 @@ public abstract class Mask : MonoBehaviour
         Down2 = 10,
         Down3 = 11
     }
+    
+    protected bool onCooldown;
+    protected float shotCooldownTime;
 
     public int powerLevel = 10;
     public float knockback = 1;
@@ -33,6 +37,43 @@ public abstract class Mask : MonoBehaviour
     public WeaponSlot slot;
     [HideInInspector] public PlayerEffects playerEffects;
     [HideInInspector] public WeaponAim weaponAim;
+    [HideInInspector] public bool triggerHeld;
 
-    public abstract void Fire();
+    private void Awake()
+    {
+        weaponAim = gameObject.AddComponent<WeaponAim>();
+    }
+
+    private void OnEnable()
+    {
+        onCooldown = false;
+    }
+
+    private void OnDisable()
+    {
+        triggerHeld = false;
+    }
+
+    private void Update()
+    {
+        if (onCooldown)
+        {
+            shotCooldownTime -= Time.deltaTime;
+            if (shotCooldownTime < 0)
+                onCooldown = false;
+        }
+        else
+        {
+            if (triggerHeld)
+                Fire();
+        }
+    }
+
+    protected abstract void Fire();
+
+    protected void WeaponCooldown()
+    {
+        onCooldown = true;
+        shotCooldownTime = 1f / (roundsPerSecond * playerEffects.fireRateMult);
+    }
 }

@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8287057493912662403}
   - component: {fileID: 8287057493912662402}
-  - component: {fileID: 7774948857917836326}
   - component: {fileID: 8216663481633160734}
   m_Layer: 10
   m_Name: Eyes
@@ -69,8 +68,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -1670816115
-  m_SortingLayer: 4
+  m_SortingLayerID: 450400295
+  m_SortingLayer: 8
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 951edfa8bca68f245847c68981402b02, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -83,19 +82,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &7774948857917836326
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8287057493912662400}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0123858e2b2034b489520573d0fde3c4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  movement: {fileID: 0}
 --- !u!114 &8216663481633160734
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -109,6 +95,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   powerLevel: 0
+  knockback: 1
+  damage: 1
+  spread: 0
+  roundsPerSecond: 1
+  bulletSpeed: 1
+  bulletSize: 1
+  reflectCount: 0
+  bulletPrefab: {fileID: 0}
+  passiveEffect: {fileID: 0}
   slot: 0
-  movement: {fileID: 0}
-  shotFrequency: 0.35
+  playerEffects: {fileID: 0}
+  weaponAim: {fileID: 0}
+  triggerHeld: 0

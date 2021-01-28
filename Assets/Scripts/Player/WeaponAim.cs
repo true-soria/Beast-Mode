@@ -7,11 +7,10 @@ public class WeaponAim : MonoBehaviour
 {
     public readonly float _eyeDistance = 0.13f;
 
-    // [HideInInspector] public PlayerMovement movement;
     [HideInInspector] public SpriteRenderer mask;
     [HideInInspector] public Vector2 aim;
 
-    private void Start()
+    private void Awake()
     {
         mask = GetComponent<SpriteRenderer>();
     }

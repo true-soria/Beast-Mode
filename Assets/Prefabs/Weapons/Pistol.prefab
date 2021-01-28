@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 4155140212848033181}
   - component: {fileID: 4155140212848033180}
   - component: {fileID: 4155140212848033155}
-  - component: {fileID: 1737918901266401728}
   m_Layer: 10
   m_Name: Pistol
   m_TagString: Weapon
@@ -71,7 +70,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 450400295
-  m_SortingLayer: 7
+  m_SortingLayer: 8
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 909f28af3e9726549b568fc3626fab33, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -110,20 +109,7 @@ MonoBehaviour:
   slot: 0
   playerEffects: {fileID: 0}
   weaponAim: {fileID: 0}
---- !u!114 &1737918901266401728
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4155140212848033182}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0123858e2b2034b489520573d0fde3c4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  movement: {fileID: 0}
-  mask: {fileID: 0}
+  triggerHeld: 0
 --- !u!1 &4155140213005198925
 GameObject:
   m_ObjectHideFlags: 0
@@ -192,7 +178,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 450400295
-  m_SortingLayer: 7
+  m_SortingLayer: 8
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 951edfa8bca68f245847c68981402b02, type: 3}
   m_Color: {r: 1, g: 1, b: 0, a: 1}

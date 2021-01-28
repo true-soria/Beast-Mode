@@ -68,7 +68,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 450400295
-  m_SortingLayer: 7
+  m_SortingLayer: 8
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 951edfa8bca68f245847c68981402b02, type: 3}
   m_Color: {r: 1, g: 1, b: 0, a: 1}
@@ -91,7 +91,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5437129971107447643}
   - component: {fileID: 5437129971107447642}
-  - component: {fileID: 7692362484860712710}
   - component: {fileID: 2946558584380703609}
   m_Layer: 10
   m_Name: Shotgun
@@ -152,7 +151,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 450400295
-  m_SortingLayer: 7
+  m_SortingLayer: 8
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: f9c4afcf8871cee4cadcb045f6a7ed14, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -165,20 +164,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &7692362484860712710
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5437129971107447640}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0123858e2b2034b489520573d0fde3c4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  movement: {fileID: 0}
-  mask: {fileID: 0}
 --- !u!114 &2946558584380703609
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -198,11 +183,13 @@ MonoBehaviour:
   roundsPerSecond: 1
   bulletSpeed: 15
   bulletSize: 3
+  reflectCount: 0
   bulletPrefab: {fileID: 5137073831402312112, guid: 8770befc1fb364f4c934d9f23d5e3ffc,
     type: 3}
   passiveEffect: {fileID: 11400000, guid: 8aab79d84fd8139419ebcedb2e934804, type: 2}
   slot: 3
   playerEffects: {fileID: 0}
   weaponAim: {fileID: 0}
+  triggerHeld: 0
   pelletCount: 7
   pelletFanWidth: 20

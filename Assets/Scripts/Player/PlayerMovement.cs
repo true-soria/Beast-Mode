@@ -8,22 +8,18 @@ public class PlayerMovement : MonoBehaviour
     public float baseMoveSpeed;
     public float baseJumpHeight;
     public float wallKickMultiplier;
+    public float airSpeedMult;
     public float dashSpeed;
     public float slamSpeed;
     public float floatSpeed;
     public float slamGravityScale;
     public float slidingGravityScale;
-    [SerializeField] private GameManager gameManager;
 
     private Rigidbody2D _body;
     private SpriteRenderer _sprite;
     private BoxCollider2D _collisionBox;
     private CircleCollider2D _hurtBox;
 
-    private PlayerControls _controls;
-    private PlayerManager _playerManager;
-    
-    public Vector2 move;
     private State _currentState = State.Air;
     private Vector3 _slideJump;
     private int _jumpsLeft;
@@ -34,8 +30,8 @@ public class PlayerMovement : MonoBehaviour
     private float _jumpHeight;
 
     [HideInInspector] public PlayerEffects playerEffects;
-    [HideInInspector] public Vector2 rsMove;
-    [HideInInspector] public bool triggerHeld = false;
+    [HideInInspector] public Vector2 move;
+    [HideInInspector] public Vector2 aim;
     
 
     enum State
@@ -49,56 +45,12 @@ public class PlayerMovement : MonoBehaviour
         Clinging
     }
 
-    private void Awake()
-    {
-        _controls = new PlayerControls();
-
-        _controls.Gameplay.A.performed += ctx => ActionJump();
-        _controls.Gameplay.RS.performed += ctx => ActionJump();
-        _controls.Gameplay.LB.performed += ctx => ActionLeftDash();
-        _controls.Gameplay.RB.performed += ctx => ActionRightDash();
-        _controls.Gameplay.LS.performed += ctx => ActionSlam();
-        _controls.Gameplay.LT.performed += ctx => StartHover();
-        _controls.Gameplay.LT.canceled += ctx => StopHover();
-        _controls.Gameplay.RT.performed += ctx => triggerHeld = true;
-        _controls.Gameplay.RT.canceled += ctx => triggerHeld = false;
-        _controls.Gameplay.Move.performed += ctx => move = ctx.ReadValue<Vector2>();
-        _controls.Gameplay.Move.canceled += ctx => move = Vector2.zero;
-        _controls.Gameplay.Aim.performed += ctx => rsMove = ctx.ReadValue<Vector2>().normalized;
-        _controls.Gameplay.Aim.canceled += ctx => rsMove = Vector2.zero;
-        _controls.Gameplay.Right.performed += ctx => _playerManager.CycleRightMask();
-        _controls.Gameplay.Left.performed += ctx => _playerManager.CycleLeftMask();
-        _controls.Gameplay.Up.performed += ctx => _playerManager.CycleUpMask();
-        _controls.Gameplay.Down.performed += ctx => _playerManager.CycleDownMask();
-        
-        _controls.Gameplay.Select.performed += ctx => gameManager.ExitGame();
-        _controls.Gameplay.Start.performed += ctx => gameManager.Restart();
-    }
-
-    private IEnumerator PauseControls(float duration)
-    {
-        _controls.Gameplay.Disable();
-        yield return new WaitForSeconds(duration);
-        _controls.Gameplay.Enable();
-    }
-
-    private void OnEnable()
-    {
-        _controls.Gameplay.Enable();
-    }
-    
-    private void OnDisable()
-    {
-        _controls.Gameplay.Disable();
-    }
-
     void Start()
     {
         _body = GetComponent<Rigidbody2D>();
         _sprite = GetComponent<SpriteRenderer>();
         _collisionBox = GetComponent<BoxCollider2D>();
         _hurtBox = GetComponentInChildren<CircleCollider2D>();
-        _playerManager = GetComponent<PlayerManager>();
         RestoreJumps();
     }
 
@@ -178,8 +130,9 @@ public class PlayerMovement : MonoBehaviour
                 if (_jumpsLeft > 0)
                 {
                     float height = Mathf.Min(_jumpHeight, 1.25f * _jumpHeight * _jumpsLeft / playerEffects.extraJumps);
+                    float deltaX = move.x * _moveSpeed * Time.deltaTime;
                     _body.velocity = Vector2.zero;
-                    _body.AddForce(Vector2.up * height, ForceMode2D.Impulse);
+                    _body.AddForce(Vector2.up * height + deltaX * Vector2.right, ForceMode2D.Impulse);
                     _jumpsLeft--;
                 }
                 break;
@@ -190,14 +143,14 @@ public class PlayerMovement : MonoBehaviour
                 if (_jumpsLeft > 0)
                 {
                     float height = Mathf.Min(_jumpHeight, 1.25f * _jumpHeight * _jumpsLeft / playerEffects.extraJumps);
+                    float deltaX = move.x * _moveSpeed * Time.deltaTime;
                     _body.velocity = Vector2.zero;
-                    _body.AddForce(Vector2.up * height, ForceMode2D.Impulse);
+                    _body.AddForce(Vector2.up * height + deltaX * Vector2.right, ForceMode2D.Impulse);
                     _jumpsLeft--;
                 }
                 break;
             case State.Grounded:
                 _currentState = State.Air;
-                _body.velocity = Vector2.zero;
                 _body.AddForce(Vector2.up * _jumpHeight, ForceMode2D.Impulse);
                 break;
             case State.Platform:
@@ -206,7 +159,6 @@ public class PlayerMovement : MonoBehaviour
                 else
                 {
                     _currentState = State.Air;
-                    _body.velocity = Vector2.zero;
                     _body.AddForce(Vector2.up * _jumpHeight, ForceMode2D.Impulse);
                 }
                 break;
@@ -217,7 +169,7 @@ public class PlayerMovement : MonoBehaviour
                 _body.gravityScale = playerEffects.gravityScale;
                 break;
             case State.Clinging:
-                _body.AddForce(rsMove * (_jumpHeight * wallKickMultiplier), ForceMode2D.Impulse);
+                _body.AddForce(aim * (_jumpHeight * wallKickMultiplier), ForceMode2D.Impulse);
                 break;
         }
     }
@@ -234,7 +186,7 @@ public class PlayerMovement : MonoBehaviour
         if (_dashesLeft > 0 && _currentState != State.Slamming)
         {
             _body.gravityScale = playerEffects.gravityScale;
-            _body.velocity = Vector2.zero;
+            _body.velocity = new Vector2(_body.velocity.x < 0 ? _body.velocity.x : 0, 0);
             _body.AddForce(new Vector2(-dashSpeed, _jumpHeight / 3), ForceMode2D.Impulse);
             _dashesLeft--;
         }
@@ -245,13 +197,13 @@ public class PlayerMovement : MonoBehaviour
         if (_dashesLeft > 0 && _currentState != State.Slamming)
         {
             _body.gravityScale = playerEffects.gravityScale;
-            _body.velocity = Vector2.zero;
+            _body.velocity = new Vector2(_body.velocity.x > 0 ? _body.velocity.x : 0, 0);
             _body.AddForce(new Vector2(dashSpeed, _jumpHeight / 3), ForceMode2D.Impulse);
             _dashesLeft--;
         }
     }
 
-    void StartHover()
+    public void ActionStartHover()
     {
         if (_floatTimeLeft > 0 && _currentState == State.Air)
         {
@@ -261,7 +213,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void StopHover()
+    public void ActionStopHover()
     {
         if (_currentState == State.Floating)
         {
@@ -301,14 +253,15 @@ public class PlayerMovement : MonoBehaviour
         if (_currentState != State.Sliding && _currentState != State.Slamming)
         {
             float deltaX = move.x * _moveSpeed * Time.deltaTime;
-            Vector2 movement = new Vector2(deltaX, _body.velocity.y);
-            if (_currentState == State.Grounded || Mathf.Abs(_body.velocity.x) < Mathf.Abs(deltaX))
+            if (_currentState == State.Grounded || _currentState == State.Platform)
             {
-                movement = new Vector2(deltaX, _body.velocity.y);
+                Vector2 movement = new Vector2(deltaX, _body.velocity.y);
                 _body.velocity = movement;
             }
-            if (movement.x != 0)
-                _sprite.flipX = movement.x < 0;
+            else if (Mathf.Sign(_body.velocity.x) * Mathf.Sign(deltaX) < 0 || Mathf.Abs(_body.velocity.x) < Mathf.Abs(deltaX))
+            {
+                _body.AddForce(new Vector2(deltaX * airSpeedMult, 0), ForceMode2D.Impulse);
+            }
         }
 
         switch (_currentState)

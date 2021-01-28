@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2203436770610278624}
   - component: {fileID: 2203436770610278625}
-  - component: {fileID: 4548772082566481085}
   - component: {fileID: 1413420414896425221}
   m_Layer: 10
   m_Name: Zantetsu
@@ -71,7 +70,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 450400295
-  m_SortingLayer: 7
+  m_SortingLayer: 8
   m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 759c36660c8446d4691f5807d9f9ec2f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -84,20 +83,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &4548772082566481085
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2203436770610278627}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0123858e2b2034b489520573d0fde3c4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  movement: {fileID: 0}
-  mask: {fileID: 0}
 --- !u!114 &1413420414896425221
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -117,12 +102,14 @@ MonoBehaviour:
   roundsPerSecond: 1.2
   bulletSpeed: 0.2
   bulletSize: 1.5
+  reflectCount: 0
   bulletPrefab: {fileID: 6934717428148704013, guid: 7d5c780a72690e245a88302ebc9dc853,
     type: 3}
   passiveEffect: {fileID: 11400000, guid: 2ecfd97ddbe87f5489c7193ae208aded, type: 2}
   slot: 9
   playerEffects: {fileID: 0}
   weaponAim: {fileID: 0}
+  triggerHeld: 0
   spawnDistance: 0.5
   lifetime: 0.8
 --- !u!1 &2203436772331924272
@@ -193,7 +180,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 450400295
-  m_SortingLayer: 7
+  m_SortingLayer: 8
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 951edfa8bca68f245847c68981402b02, type: 3}
   m_Color: {r: 1, g: 1, b: 0, a: 1}

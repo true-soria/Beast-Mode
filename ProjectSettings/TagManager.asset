@@ -8,18 +8,12 @@ TagManager:
   - Wall
   - Platform
   - Slide
-  - enemy
   - Spawner
-  - jumppad
   - Weapon
   - Bullet
   - Ceiling
   - Enemy
-  - Waypoint
   - PlayerHurtbox
-  - waypoint2
-  - wallenemy
-  - waypoint
   - Pickup
   layers:
   - Default
@@ -58,11 +52,11 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Platform
-    uniqueID: 1619990063
-    locked: 0
   - name: Barrier
     uniqueID: 698314677
+    locked: 0
+  - name: Platform
+    uniqueID: 1619990063
     locked: 0
   - name: Spawner
     uniqueID: 3176281883

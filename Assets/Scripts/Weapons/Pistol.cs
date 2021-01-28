@@ -7,31 +7,8 @@ using Random = UnityEngine.Random;
 
 public class Pistol : Mask
 {
-    private bool _onCooldown;
-    private float _shotCooldownTime = 0;
 
-    
-    private void OnEnable()
-    {
-        _onCooldown = false;
-    }
-
-    private void Update()
-    {
-        if (_onCooldown)
-        {
-            _shotCooldownTime -= Time.deltaTime;
-            if (_shotCooldownTime < 0)
-                _onCooldown = false;
-        }
-        else
-        {
-            if (weaponAim.movement.triggerHeld)
-                Fire();
-        }
-    }
-
-    public override void Fire()
+    protected override void Fire()
     {
         Transform aimTransform = weaponAim.mask.transform;
         Vector3 spawnPosition = aimTransform.position;
@@ -49,8 +26,6 @@ public class Pistol : Mask
         Rigidbody2D bulletBody = bullet.GetComponent<Rigidbody2D>();
         bulletBody.velocity = (spawnRotation * Vector3.right) * bulletSpeed;
         bulletBody.mass = knockback * playerEffects.knockbackMult;
-
-        _onCooldown = true;
-        _shotCooldownTime = 1f / (roundsPerSecond * playerEffects.fireRateMult);
+        WeaponCooldown();
     }
 }

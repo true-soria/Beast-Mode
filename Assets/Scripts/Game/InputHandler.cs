@@ -62,6 +62,19 @@ public class InputHandler : MonoBehaviour
         _controls.Gameplay.Down.performed += ctx => PerformAction("Down");
         _controls.Gameplay.Start.performed += ctx => PerformAction("Start");
         
+        _controls.Gameplay.A.canceled += ctx => CancelAction("A");
+        _controls.Gameplay.RS.canceled += ctx => CancelAction("RS");
+        _controls.Gameplay.LB.canceled += ctx => CancelAction("LB");
+        _controls.Gameplay.RB.canceled += ctx => CancelAction("RB");
+        _controls.Gameplay.LS.canceled += ctx => CancelAction("LS");
+        _controls.Gameplay.LT.canceled += ctx => CancelAction("LT");
+        _controls.Gameplay.RT.canceled += ctx => CancelAction("RT");
+        _controls.Gameplay.Right.canceled += ctx => CancelAction("Right");
+        _controls.Gameplay.Left.canceled += ctx => CancelAction("Left");
+        _controls.Gameplay.Up.canceled += ctx => CancelAction("Up");
+        _controls.Gameplay.Down.canceled += ctx => CancelAction("Down");
+        _controls.Gameplay.Start.canceled += ctx => CancelAction("Start");
+        
         _controls.Gameplay.Move.performed += ctx => _lsMove = ctx.ReadValue<Vector2>();
         _controls.Gameplay.Move.canceled += ctx => _lsMove = Vector2.zero;
         _controls.Gameplay.Aim.performed += ctx => _rsMove = ctx.ReadValue<Vector2>().normalized;
@@ -94,16 +107,56 @@ public class InputHandler : MonoBehaviour
                     playerManager.movement.ActionJump();
                     break;
                 case PlayerAction.Hover:
+                    playerManager.movement.ActionStartHover();
+                    break;
                 case PlayerAction.Slam:
+                    playerManager.movement.ActionSlam();
+                    break;
                 case PlayerAction.DashLeft:
+                    playerManager.movement.ActionLeftDash();
+                    break;
                 case PlayerAction.DashRight:
+                    playerManager.movement.ActionRightDash();
+                    break;
                 case PlayerAction.Fire:
+                    playerManager.equippedMask.triggerHeld = true;
+                    break;
                 case PlayerAction.SelectRight:
+                    playerManager.CycleRightMask();
+                    break;
                 case PlayerAction.SelectLeft:
+                    playerManager.CycleLeftMask();
+                    break;
                 case PlayerAction.SelectUp:
+                    playerManager.CycleUpMask();
+                    break;
                 case PlayerAction.SelectDown:
+                    playerManager.CycleDownMask();
+                    break;
                 case PlayerAction.Pause:
                 default:
+                    break;
+            }
+        }
+    }
+    
+    private void CancelAction(string button)
+    {
+        if (inMenu)
+        {
+            return;
+        }
+        else
+        {
+            PlayerAction action = PlayerAction.NoAction;
+            controlMapping.TryGetValue(button, out action);
+            switch (action)
+            {
+                case PlayerAction.Hover:
+                    playerManager.movement.ActionStopHover();
+                    break;
+                case PlayerAction.Fire:
+                    playerManager.equippedMask.triggerHeld = false;
                     break;
             }
         }
@@ -112,6 +165,7 @@ public class InputHandler : MonoBehaviour
     private void Update()
     {
         playerManager.movement.move = _lsMove;
+        playerManager.movement.aim = _rsMove;
         playerManager.equippedMask.weaponAim.aim = _rsMove;
     }
 }

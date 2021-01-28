@@ -17,9 +17,9 @@ public class PlayerManager : MonoBehaviour
 
     public static readonly int PerSlot = 3;
 
-    public WeaponAim eyes;
-    public PlayerMovement movement;
-    public Mask equippedMask;
+    [HideInInspector] public PlayerMovement movement;
+    [HideInInspector] public Mask equippedMask;
+    [SerializeField] private Mask eyes;
     [SerializeField] private PlayerEffects baseEffects;
     [SerializeField] private Mask[] maskPrefabs;
     [SerializeField] private GameObject displayHealthPrefab;
@@ -34,12 +34,17 @@ public class PlayerManager : MonoBehaviour
     private void Awake()
     {
         movement = GetComponent<PlayerMovement>();
-        equippedMask = eyes.gameObject.GetComponent<Mask>();
+        equippedMask = Instantiate(eyes, transform, true);
+        if (!equippedMask.weaponAim)
+            Debug.Log("Oops! no weapon aim!");
+        equippedMask.transform.localPosition = new Vector3(equippedMask.weaponAim._eyeDistance, 0, 0);
+        // equippedMask.enabled = true;
     }
 
     void Start()
     {
         _playerEffects = Instantiate(baseEffects);
+        equippedMask.playerEffects = _playerEffects;
         movement.playerEffects = _playerEffects;
         _playerHealth = gameObject.AddComponent<PlayerHealth>();
         _playerHealth.displayHealthPrefab = displayHealthPrefab;
@@ -48,10 +53,8 @@ public class PlayerManager : MonoBehaviour
         foreach (Mask mask in maskPrefabs)
         {
             Mask spawnedMask = Instantiate(mask, transform, true);
-            WeaponAim maskAim = spawnedMask.GetComponent<WeaponAim>();
-            
-            spawnedMask.transform.localPosition = new Vector3(maskAim._eyeDistance, 0, 0);
-            spawnedMask.weaponAim = maskAim;
+
+            spawnedMask.transform.localPosition = new Vector3(spawnedMask.weaponAim._eyeDistance, 0, 0);
             spawnedMask.playerEffects = _playerEffects;
             
             // TODO function
