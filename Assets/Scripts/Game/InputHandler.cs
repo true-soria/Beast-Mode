@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class InputHandler : MonoBehaviour
 {
@@ -21,7 +22,7 @@ public class InputHandler : MonoBehaviour
         Pause
     }
 
-    public bool inMenu;
+    public static bool inMenu;
     public Dictionary<string, PlayerAction> controlMapping;
 
     [SerializeField] private PlayerManager playerManager;
@@ -95,7 +96,12 @@ public class InputHandler : MonoBehaviour
     {
         if (inMenu)
         {
-            return;
+            // switch (button)
+            // {
+            //     case "Left":
+            //         EventSystem.current.
+            //     case "Right":
+            // }
         }
         else
         {
@@ -164,8 +170,15 @@ public class InputHandler : MonoBehaviour
 
     private void Update()
     {
-        playerManager.movement.move = _lsMove;
-        playerManager.movement.aim = _rsMove;
-        playerManager.equippedMask.weaponAim.aim = _rsMove;
+        if (inMenu)
+        {
+            
+        }
+        else
+        {
+            playerManager.movement.move = _lsMove;
+            playerManager.movement.aim = _rsMove;
+            playerManager.equippedMask.weaponAim.aim = _rsMove;
+        }
     }
 }

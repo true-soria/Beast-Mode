@@ -189,12 +189,12 @@ public class PlayerManager : MonoBehaviour
         else
         {
             Buff tempBuff = Instantiate(pickup.effect);
-            if (_tempBuffs.ContainsKey(tempBuff.name))
-                _tempBuffs[tempBuff.name] = pickup.duration - Time.deltaTime;
+            if (_tempBuffs.ContainsKey(tempBuff.buffName))
+                _tempBuffs[tempBuff.buffName] = pickup.duration - Time.deltaTime;
             else
             {
                 ApplyBuff(tempBuff);
-                _tempBuffs[tempBuff.name] = pickup.duration - Time.deltaTime;
+                _tempBuffs[tempBuff.buffName] = pickup.duration - Time.deltaTime;
                 StartCoroutine(TempBuff(tempBuff, pickup.duration));
             }
 
@@ -206,8 +206,8 @@ public class PlayerManager : MonoBehaviour
     public IEnumerator TempBuff(Buff buff, float duration)
     {
         yield return new WaitForSeconds(duration);
-        if (_tempBuffs[buff.name] > 0)
-            StartCoroutine(TempBuff(buff, _tempBuffs[buff.name]));
+        if (_tempBuffs[buff.buffName] > 0)
+            StartCoroutine(TempBuff(buff, _tempBuffs[buff.buffName]));
         else
         {
             ApplyDebuff(buff);
