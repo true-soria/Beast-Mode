@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.XR;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -16,7 +14,6 @@ public class PlayerMovement : MonoBehaviour
     public float slidingGravityScale;
 
     private Rigidbody2D _body;
-    private SpriteRenderer _sprite;
     private BoxCollider2D _collisionBox;
     private CircleCollider2D _hurtBox;
 
@@ -48,7 +45,6 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         _body = GetComponent<Rigidbody2D>();
-        _sprite = GetComponent<SpriteRenderer>();
         _collisionBox = GetComponent<BoxCollider2D>();
         _hurtBox = GetComponentInChildren<CircleCollider2D>();
         RestoreJumps();

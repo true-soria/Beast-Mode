@@ -38,7 +38,6 @@ public class PlayerManager : MonoBehaviour
         if (!equippedMask.weaponAim)
             Debug.Log("Oops! no weapon aim!");
         equippedMask.transform.localPosition = new Vector3(equippedMask.weaponAim._eyeDistance, 0, 0);
-        // equippedMask.enabled = true;
     }
 
     void Start()
@@ -126,9 +125,8 @@ public class PlayerManager : MonoBehaviour
     
     public void CycleDownMask()
     {
-        if (_playerEffects.slamPower > 0)
-            _playerEffects.slamEquipped = _playerEffects.slamEquipped % _playerEffects.slamPower + 1;
         CycleMask((int) Direction.Down);
+        _playerEffects.slamEquipped = _currentMask[(int) Direction.Down];
     }
 
     
@@ -190,11 +188,11 @@ public class PlayerManager : MonoBehaviour
         {
             Buff tempBuff = Instantiate(pickup.effect);
             if (_tempBuffs.ContainsKey(tempBuff.name))
-                _tempBuffs[tempBuff.name] = pickup.duration - Time.deltaTime;
+                _tempBuffs[tempBuff.name] = pickup.duration;
             else
             {
                 ApplyBuff(tempBuff);
-                _tempBuffs[tempBuff.name] = pickup.duration - Time.deltaTime;
+                _tempBuffs[tempBuff.name] = pickup.duration;
                 StartCoroutine(TempBuff(tempBuff, pickup.duration));
             }
 
@@ -205,12 +203,13 @@ public class PlayerManager : MonoBehaviour
 
     public IEnumerator TempBuff(Buff buff, float duration)
     {
-        yield return new WaitForSeconds(duration);
+        yield return new WaitForSeconds(duration + Time.deltaTime);
         if (_tempBuffs[buff.name] > 0)
             StartCoroutine(TempBuff(buff, _tempBuffs[buff.name]));
         else
         {
             ApplyDebuff(buff);
+            _tempBuffs.Remove(buff.name);
             Destroy(buff);
         }
     }
