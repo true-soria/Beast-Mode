@@ -30,8 +30,8 @@ public class GenericBullet : Bullet
         switch (other.gameObject.tag)
         {
             case "Enemy":
-                Combat combat = other.gameObject.GetComponent<Combat>();
-                combat.TakeDamage(damage);
+                EnemyHP enemyHp = other.gameObject.GetComponent<EnemyHP>();
+                enemyHp.TakeDamage(damage);
                 
                 if (reflectCount <= 0)
                     Destroy(gameObject);
@@ -61,6 +61,9 @@ public class GenericBullet : Bullet
                     _body.velocity = _direction * _speed;
                 }
                 reflectCount--;
+                break;
+            default:
+                Destroy(gameObject);
                 break;
         }
     }

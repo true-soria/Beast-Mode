@@ -54,7 +54,7 @@ public abstract class Mask : MonoBehaviour
         triggerHeld = false;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (onCooldown)
         {

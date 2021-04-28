@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8458906448050136602}
   - component: {fileID: 8458906448050136601}
-  - component: {fileID: -4580925574440459714}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -45,15 +44,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetFPS: 60
---- !u!114 &-4580925574440459714
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8458906448050136600}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7963e9fca40c2224985583842eba406d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  playerSpawnPosition: {fileID: 0}
+  cmCamera: {fileID: 0}
+  mainCamera: {fileID: 0}
+  defaultCameraBounds: {fileID: 0}
+  cameraCmPrefab: {fileID: 4653977535666702584, guid: 93ca4abe633f86943b22f48b198ee399,
+    type: 3}
+  playerPrefab: {fileID: 4315040612786679241, guid: b558ea774c77f9d4587813dfbed6377a,
+    type: 3}

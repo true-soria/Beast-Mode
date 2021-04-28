@@ -11,9 +11,11 @@ GameObject:
   - component: {fileID: 831683278453962615}
   - component: {fileID: 831683278453962614}
   - component: {fileID: 831683278453962613}
+  - component: {fileID: 1051661692789550123}
   - component: {fileID: 831683278453962612}
-  - component: {fileID: 831683278453962608}
-  - component: {fileID: -4106104413821522997}
+  - component: {fileID: 8141168281953998917}
+  - component: {fileID: 6327309468565201389}
+  - component: {fileID: 1852014740888605514}
   m_Layer: 14
   m_Name: Chaser Round
   m_TagString: Bullet
@@ -72,7 +74,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1930690623
-  m_SortingLayer: 6
+  m_SortingLayer: 7
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 06d6b04eb7095a844ab12cf8faefa41e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -111,6 +113,22 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.21875, y: 0.09375}
   m_EdgeRadius: 0
+--- !u!58 &1051661692789550123
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 831683278453962619}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 2
 --- !u!50 &831683278453962612
 Rigidbody2D:
   serializedVersion: 4
@@ -132,7 +150,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &831683278453962608
+--- !u!114 &8141168281953998917
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -141,13 +159,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 831683278453962619}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d67bcac4b76a7bc4f840ce50c2f0778f, type: 3}
+  m_Script: {fileID: 11500000, guid: 46b0129d452000b4f937d3650cda9db0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  version: 1
   reflectCount: 0
   damage: 0
   lifetime: 0
---- !u!114 &-4106104413821522997
+--- !u!114 &6327309468565201389
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -164,8 +183,8 @@ MonoBehaviour:
   detailedGizmos: 0
   startEndModifier:
     addPoints: 0
-    exactStartPoint: 3
-    exactEndPoint: 3
+    exactStartPoint: 4
+    exactEndPoint: 0
     useRaycasting: 0
     mask:
       serializedVersion: 2
@@ -175,3 +194,26 @@ MonoBehaviour:
   tagPenalties: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   graphMask:
     value: -1
+--- !u!114 &1852014740888605514
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 831683278453962619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 847a14d4dc9cc43679ab34fc78e0182f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 2
+  repathRate: 1
+  canSearch: 1
+  canMove: 1
+  speed: 5
+  orientation: 1
+  enableRotation: 1
+  rotationSpeed: 3.5
+  interpolatePathSwitches: 1
+  switchPathInterpolationSpeed: 10
+  targetCompatibility: {fileID: 0}

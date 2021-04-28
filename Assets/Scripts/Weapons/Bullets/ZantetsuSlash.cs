@@ -6,13 +6,13 @@ using UnityEngine;
 public class ZantetsuSlash : Bullet
 {
     private float _tick = 0;
-    private HashSet<Combat> _enemies = new HashSet<Combat>();
+    private HashSet<EnemyHP> _enemies = new HashSet<EnemyHP>();
 
     private void OnTriggerStay2D(Collider2D other)
     {
         if (other.gameObject.tag.Equals("Enemy"))
         {
-            _enemies.Add(other.gameObject.GetComponent<Combat>());
+            _enemies.Add(other.gameObject.GetComponent<EnemyHP>());
         }
     }
 
@@ -20,12 +20,12 @@ public class ZantetsuSlash : Bullet
     {
         if (_tick <= 0)
         {
-            foreach (Combat enemy in _enemies)
+            foreach (EnemyHP enemy in _enemies)
             {
                 if (enemy)
                     enemy.TakeDamage(damage);
             }
-            _enemies = new HashSet<Combat>();
+            _enemies = new HashSet<EnemyHP>();
             _tick = TickRate;
         }
         

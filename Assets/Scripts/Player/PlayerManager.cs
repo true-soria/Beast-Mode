@@ -35,10 +35,7 @@ public class PlayerManager : MonoBehaviour
     {
         movement = GetComponent<PlayerMovement>();
         equippedMask = Instantiate(eyes, transform, true);
-        if (!equippedMask.weaponAim)
-            Debug.Log("Oops! no weapon aim!");
-        equippedMask.transform.localPosition = new Vector3(equippedMask.weaponAim._eyeDistance, 0, 0);
-        // equippedMask.enabled = true;
+        equippedMask.transform.localPosition = new Vector3(equippedMask.weaponAim.eyeDistance, 0, 0);
     }
 
     void Start()
@@ -54,7 +51,7 @@ public class PlayerManager : MonoBehaviour
         {
             Mask spawnedMask = Instantiate(mask, transform, true);
 
-            spawnedMask.transform.localPosition = new Vector3(spawnedMask.weaponAim._eyeDistance, 0, 0);
+            spawnedMask.transform.localPosition = new Vector3(spawnedMask.weaponAim.eyeDistance, 0, 0);
             spawnedMask.playerEffects = _playerEffects;
             
             // TODO function
@@ -134,6 +131,8 @@ public class PlayerManager : MonoBehaviour
     
     private void CycleMask(int direction)
     {
+        Vector2 currentAim = equippedMask.weaponAim.aim;
+        bool currentFireState = equippedMask.triggerHeld;
         int current = _currentMask[direction];
         if (current < 0)
             return;
@@ -155,6 +154,9 @@ public class PlayerManager : MonoBehaviour
         {
             EquipNewMask((direction, current));
         }
+
+        equippedMask.weaponAim.aim = currentAim;
+        equippedMask.triggerHeld = currentFireState;
     }
 
     private void EquipNewMask((int, int) newMaskIndex)

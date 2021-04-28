@@ -97,13 +97,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   powerLevel: 10
   knockback: 0.7
-  damage: 20
+  damage: 1
   spread: 0
   roundsPerSecond: 0.75
   bulletSpeed: 8
   bulletSize: 1
-  reflectCount: 1
-  bulletPrefab: {fileID: 831683278453962608, guid: 7683597c364c64c4e82ddfac798f0807,
+  reflectCount: 0
+  bulletPrefab: {fileID: 8141168281953998917, guid: 7683597c364c64c4e82ddfac798f0807,
     type: 3}
   passiveEffect: {fileID: 11400000, guid: dc7f3b3ae903107418a7b1a41eca55a5, type: 2}
   slot: 6

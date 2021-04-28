@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Pathfinding;
 using UnityEngine;
 
-public abstract class Bullet : MonoBehaviour
+public abstract class Bullet : VersionedMonoBehaviour
 {
     public static readonly float TickRate = 0.2f; 
     [HideInInspector] public int reflectCount;

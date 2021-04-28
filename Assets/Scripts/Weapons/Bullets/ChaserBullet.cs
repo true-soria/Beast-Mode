@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Pathfinding;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class ChaserBullet : Bullet
@@ -9,30 +11,57 @@ public class ChaserBullet : Bullet
     private float _speed;
     private Vector2 _direction;
     private Transform _target;
+    private IAstarAI _astarAI;
+
+    private bool _allowRotation = true;
+    private readonly float _rotationTimeDelay = 0.2f;
 
     private void Start()
     {
         _body = GetComponent<Rigidbody2D>();
         _speed = _body.velocity.magnitude;
         _direction = _body.velocity.normalized;
+        _astarAI = GetComponent<IAstarAI>();
+        _astarAI.maxSpeed = _speed * 1.5f;
+    }
 
+    private void OnEnable()
+    {
+        if (_astarAI != null) _astarAI.onSearchPath += FixedUpdate;
+    }
+
+    private void OnDisable()
+    {
+        if (_astarAI != null) _astarAI.onSearchPath -= FixedUpdate;
+        _target = null;
     }
 
     private void FixedUpdate()
     {
+        if (_target != null && _astarAI != null)
+        {
+            _direction = transform.rotation * Vector3.right;
+            _astarAI.destination = _target.position;
+        }
         if (_body.velocity.magnitude < _speed)
         {
             _body.velocity = _direction * _speed;
         }
     }
-    
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("Enemy"))
+            _target = other.gameObject.transform;
+    }
+
     private void OnCollisionEnter2D(Collision2D other)
     {
         switch (other.gameObject.tag)
         {
             case "Enemy":
-                BatCombat batCombat = other.gameObject.GetComponent<BatCombat>();
-                batCombat.TakeDamage(damage);
+                EnemyHP enemyHp = other.gameObject.GetComponent<EnemyHP>();
+                enemyHp.TakeDamage(damage);
                 
                 if (reflectCount <= 0)
                     Destroy(gameObject);
@@ -62,6 +91,9 @@ public class ChaserBullet : Bullet
                     _body.velocity = _direction * _speed;
                 }
                 reflectCount--;
+                break;
+            default:
+                Destroy(gameObject);
                 break;
         }
     }
