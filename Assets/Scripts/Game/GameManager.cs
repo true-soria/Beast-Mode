@@ -8,8 +8,7 @@ using UnityEngine.Serialization;
 
 public class GameManager : MonoBehaviour
 {
-    public int targetFPS = 60;
-    public Transform playerSpawnPosition;
+    public Transform defaultPlayerSpawnPosition;
     [HideInInspector] public CinemachineVirtualCamera cmCamera;
     [HideInInspector] public Camera mainCamera;
     public Collider2D defaultCameraBounds;
@@ -20,20 +19,19 @@ public class GameManager : MonoBehaviour
     private CinemachineConfiner _cinemachineConfiner;
     private Scene _currentScene;
     private PlayerHealth _playerHealth;
+    private ActionHandler _actionHandler;
     private GameObject _player;
-    private Transform _fixedPosition;
+    private Transform _fixedCameraPosition;
+    private Collider2D _specialCameraBounds;
+    private Transform _currentPlayerSpawnPosition;
 
-    void Awake()
+    private const float TemporaryDamping = 1.5f;
+
+        private void Awake()
     {
-        QualitySettings.vSyncCount = 0;
-        Application.targetFrameRate = targetFPS;
-#if UNITY_EDITOR
-        QualitySettings.vSyncCount = 0;
-        Application.targetFrameRate = targetFPS;
-#endif
-        
-        if (playerSpawnPosition)
-            _player = Instantiate(playerPrefab, playerSpawnPosition.position, Quaternion.identity);
+        _currentPlayerSpawnPosition = defaultPlayerSpawnPosition;
+        if (_currentPlayerSpawnPosition)
+            _player = Instantiate(playerPrefab, _currentPlayerSpawnPosition.position, Quaternion.identity);
         else
             _player = Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
 
@@ -44,21 +42,62 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         _cinemachineConfiner = cmCamera.gameObject.GetComponent<CinemachineConfiner>();
-        ActionHandler actionHandler = _player.GetComponent<ActionHandler>();
+        _actionHandler = _player.GetComponent<ActionHandler>();
+        _playerHealth = _player.GetComponent<PlayerHealth>();
+        _playerHealth.gameManager = this;
         
-        cmCamera.Follow = cmCamera.LookAt = _player.transform;
+        cmCamera.Follow = _actionHandler.crosshair.transform;
+        cmCamera.LookAt = _player.transform;
         _cinemachineConfiner.m_BoundingShape2D = defaultCameraBounds;
-        actionHandler.camera = mainCamera;
+        _actionHandler.playerCamera = mainCamera;
         _currentScene = SceneManager.GetActiveScene();
     }
-    
-    void Update()
+
+    public void RespawnObject(GameObject item)
     {
-        if(Application.targetFrameRate != targetFPS)
-            Application.targetFrameRate = targetFPS;
+        if (_currentPlayerSpawnPosition)
+            item.transform.position = _currentPlayerSpawnPosition.position;
     }
-    
-    
+
+    public void RespawnPlayer()
+    {
+        if (_currentPlayerSpawnPosition)
+            _player.transform.position = _currentPlayerSpawnPosition.position;
+    }
+
+    public void SetSpawn(Transform spawn)
+    {
+        _currentPlayerSpawnPosition = spawn;
+    }
+
+    public void ResetSpawn()
+    {
+        _currentPlayerSpawnPosition = defaultPlayerSpawnPosition;
+    }
+
+    public void FixCameraPosition(Transform fixedPosition)
+    {
+        cmCamera.Follow = fixedPosition;
+    }
+
+    public void SetCameraBounds(Collider2D bounds)
+    {
+        StartCoroutine(CameraBoundsSlowIn());
+        _cinemachineConfiner.m_BoundingShape2D = bounds;
+    }
+
+    private IEnumerator CameraBoundsSlowIn()
+    {
+        _cinemachineConfiner.m_Damping = TemporaryDamping;
+        yield return new WaitForSeconds(TemporaryDamping);
+        _cinemachineConfiner.m_Damping = 0f;
+    }
+
+    public void ReleaseCamera()
+    {
+        cmCamera.Follow = _actionHandler.crosshair.transform;
+        _cinemachineConfiner.m_BoundingShape2D = defaultCameraBounds;
+    }
 
     public static void ExitGame()
     {

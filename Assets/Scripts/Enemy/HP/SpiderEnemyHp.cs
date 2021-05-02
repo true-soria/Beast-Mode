@@ -16,7 +16,7 @@ public class SpiderEnemyHp : EnemyHP
         enemyStats.hitPoints = enemyStats.maxHitPoints;
     }
 
-    public override void TakeDamage(int damage)
+    public override void TakeDamage(int damage, Vector3 force = new Vector3())
     {
         enemyStats.hitPoints -= damage;
         if (enemyStats.hitPoints <= 0)

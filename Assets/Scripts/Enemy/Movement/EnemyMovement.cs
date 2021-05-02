@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Pathfinding;
 using UnityEngine;
-using UnityEngine.XR;
 using Random = UnityEngine.Random;
 
 public class EnemyMovement : VersionedMonoBehaviour
@@ -13,24 +12,30 @@ public class EnemyMovement : VersionedMonoBehaviour
     public DamagePlayer damage;
     public GameObject itemDrop;
     public float corpseDecayTime;
-    public Vector3[] guardPositions;
+    public Transform[] patrolMarkers;
     public float maxWanderDistance;
+    
+    protected Rigidbody2D body;
 
     public enum AttackState
     {
         Stopped = 0,
         Wandering,
         Attacking,
-        Following,
-        Frenzy
+        Following
     }
     
+    [HideInInspector] public bool frenzied;
     [HideInInspector] public float globalAggression = 0.5f;
     [HideInInspector] public bool stateUnlocked = true;
     [HideInInspector] public AttackState attackState;
     [HideInInspector] public Transform target;
     
     [SerializeField] protected float baseAggression = 0.5f;
+
+    protected  const float FrenzyRange = 16f;
+    protected readonly string[] enemyLayers = {"Enemies", "EnemiesNoPlatform"};
+    
     private void Start()
     {
         InitComponents();
@@ -49,7 +54,10 @@ public class EnemyMovement : VersionedMonoBehaviour
 
     protected virtual void InitComponents()
     {
+        body = gameObject.GetComponent<Rigidbody2D>();
         damage.hp = hp;
+        damage.enemyMovement = this;
+        damage.body = body;
         hp.enemyMovement = this;
     }
 
@@ -64,6 +72,7 @@ public class EnemyMovement : VersionedMonoBehaviour
 
     public void FindNewTarget(Transform forcedTarget = null)
     {
+        frenzied = false;
         if (forcedTarget)
             target = forcedTarget;
         else
@@ -80,7 +89,7 @@ public class EnemyMovement : VersionedMonoBehaviour
             }
             else
             {
-                FrenzyActive(true);
+                ActivateFrenzy();
             }
         }
     }
@@ -100,9 +109,14 @@ public class EnemyMovement : VersionedMonoBehaviour
         return closest;
     }
 
-    protected virtual void FrenzyActive(bool frenzy)
+    protected virtual void ActivateFrenzy()
     {
-        attackState = AttackState.Frenzy;
+        frenzied = true;
+        RaycastHit2D hit = Physics2D.CircleCast(transform.position, FrenzyRange * AggressionValue(), Vector2.right, 1f, (LayerMask.GetMask(enemyLayers)));
+        if (hit.collider)
+            target = hit.transform;
+        else
+            target = transform;
     }
 
     public IEnumerator TriggerDeath()
@@ -126,8 +140,8 @@ public class EnemyMovement : VersionedMonoBehaviour
     protected virtual Vector3 GetRoamingPosition()
     {
         Vector3 direction = new Vector3(Random.value, Random.value).normalized;
-        if (guardPositions.Length > 0)
-            return guardPositions[Random.Range(0, guardPositions.Length - 1)] + direction * Random.Range(0, maxWanderDistance);
+        if (patrolMarkers.Length > 0)
+            return patrolMarkers[Random.Range(0, patrolMarkers.Length)].position + direction * Random.Range(0f, maxWanderDistance);
         
         return transform.position + direction * Random.Range(0, maxWanderDistance);
     }
@@ -144,5 +158,15 @@ public class EnemyMovement : VersionedMonoBehaviour
             else
                 attackState = AttackState.Stopped;
         }
+    }
+
+    public virtual void ReceiveKnockBack(Vector3 force)
+    {
+        body.velocity = force;
+    }
+
+    protected virtual float AggressionValue()
+    {
+        return 0.5f + globalAggression + baseAggression;
     }
 }

@@ -207,7 +207,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Settings
+  m_Text: Controls
 --- !u!1 &4394985451512758721
 GameObject:
   m_ObjectHideFlags: 0
@@ -613,12 +613,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4394985451878959292}
-        m_MethodName: 
+      - m_Target: {fileID: 4394985451878959289}
+        m_MethodName: StartNewGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -742,7 +742,7 @@ MonoBehaviour:
   levelSelectButton: {fileID: 4394985452851703136}
   settingsButton: {fileID: 4394985451790669599}
   exitGameButton: {fileID: 4394985451457092572}
-  settingsMenuPrefab: {fileID: 5096677954375565168, guid: 856710199b6db864a9d0f8be7297ac23,
+  controlsMenuPrefab: {fileID: 7945594275895010373, guid: 211420eedb9eaad47a2d5827d975624f,
     type: 3}
   quitMenuPrefab: {fileID: 3461285550850003952, guid: bed1742f8280ac54b9fb37700407b800,
     type: 3}
@@ -1027,9 +1027,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'New Game
-
-'
+  m_Text: New Game
 --- !u!1 &4394985452851703142
 GameObject:
   m_ObjectHideFlags: 0

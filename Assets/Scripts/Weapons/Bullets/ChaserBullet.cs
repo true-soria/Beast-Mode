@@ -8,21 +8,16 @@ using UnityEngine;
 public class ChaserBullet : Bullet
 {
     private Rigidbody2D _body;
-    private float _speed;
-    private Vector2 _direction;
     private Transform _target;
     private IAstarAI _astarAI;
-
-    private bool _allowRotation = true;
-    private readonly float _rotationTimeDelay = 0.2f;
 
     private void Start()
     {
         _body = GetComponent<Rigidbody2D>();
-        _speed = _body.velocity.magnitude;
-        _direction = _body.velocity.normalized;
+        speed = _body.velocity.magnitude;
+        direction = _body.velocity.normalized;
         _astarAI = GetComponent<IAstarAI>();
-        _astarAI.maxSpeed = _speed * 1.5f;
+        _astarAI.maxSpeed = speed * 1.5f;
     }
 
     private void OnEnable()
@@ -40,12 +35,12 @@ public class ChaserBullet : Bullet
     {
         if (_target != null && _astarAI != null)
         {
-            _direction = transform.rotation * Vector3.right;
+            direction = transform.rotation * Vector3.right;
             _astarAI.destination = _target.position;
         }
-        if (_body.velocity.magnitude < _speed)
+        if (_body.velocity.magnitude < speed)
         {
-            _body.velocity = _direction * _speed;
+            _body.velocity = direction * speed;
         }
     }
 
@@ -61,20 +56,17 @@ public class ChaserBullet : Bullet
         {
             case "Enemy":
                 EnemyHP enemyHp = other.gameObject.GetComponent<EnemyHP>();
-                enemyHp.TakeDamage(damage);
-                
+                enemyHp.TakeDamage(damage, direction * knockBack);
+
                 if (reflectCount <= 0)
                     Destroy(gameObject);
                 else
                 {
-                    Vector2 surfaceNormal = other.GetContact(0).normal.normalized;
-                    _direction = (_direction - 2 * Vector2.Dot(_direction, surfaceNormal) * surfaceNormal).normalized;
-                    float angle = Mathf.Sign(_direction.y) * Vector2.Angle(Vector2.right, _direction);
-                    transform.rotation = Quaternion.Euler(0, 0, angle);
-
-                    _body.velocity = _direction * _speed;
+                    ReflectBulletDirection(other.GetContact(0).normal.normalized);
+                    _body.velocity = direction * speed;
+                    _body.AddForce(direction * speed * 2f, ForceMode2D.Impulse);
+                    reflectCount--;
                 }
-                reflectCount--;
                 break;
             case "Ceiling":
             case "Wall":
@@ -83,14 +75,10 @@ public class ChaserBullet : Bullet
                     Destroy(gameObject);
                 else
                 {
-                    Vector2 surfaceNormal = other.GetContact(0).normal.normalized;
-                    _direction = (_direction - 2 * Vector2.Dot(_direction, surfaceNormal) * surfaceNormal).normalized;
-                    float angle = Mathf.Sign(_direction.y) * Vector2.Angle(Vector2.right, _direction);
-                    transform.rotation = Quaternion.Euler(0, 0, angle);
-                    
-                    _body.velocity = _direction * _speed;
+                    ReflectBulletDirection(other.GetContact(0).normal.normalized);
+                    _body.velocity = direction * speed;
+                    reflectCount--;
                 }
-                reflectCount--;
                 break;
             default:
                 Destroy(gameObject);

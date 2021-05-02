@@ -505,9 +505,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Close Menu
-
-'
+  m_Text: Close Menu
 --- !u!1 &8824831483155677505
 GameObject:
   m_ObjectHideFlags: 0

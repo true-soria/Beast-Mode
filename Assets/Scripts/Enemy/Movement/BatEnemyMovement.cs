@@ -24,15 +24,24 @@ public class BatEnemyMovement : EnemyMovement
     {
         base.RestartComponents();
         _currentFocus = GetRoamingPosition();
-        float aggressionModifier = 0.5f + globalAggression + baseAggression;
-        if (_astarAI != null) _astarAI.onSearchPath += FixedUpdate;
+        damageBox.enabled = false;
+        float aggressionModifier = AggressionValue();
+        if (_astarAI != null)
+        {
+            _astarAI.onSearchPath += FixedUpdate;
+            _astarAI.enabled = true;
+        }
         InvokeRepeating(nameof(CycleFocus), 3.5f / aggressionModifier, 1 / aggressionModifier);
     }
 
     protected override void StopComponents()
     {
         base.StopComponents();
-        if (_astarAI != null) _astarAI.onSearchPath -= FixedUpdate;
+        if (_astarAI != null)
+        {
+            _astarAI.onSearchPath -= FixedUpdate;
+            _astarAI.enabled = false;
+        }
         CancelInvoke();
     }
 
@@ -57,7 +66,7 @@ public class BatEnemyMovement : EnemyMovement
 
     private void CycleFocus()
     {
-        float aggressionModifier = 0.5f + globalAggression + baseAggression;
+        float aggressionModifier = AggressionValue();
         switch (attackState)
         {
             case AttackState.Stopped:
@@ -79,6 +88,7 @@ public class BatEnemyMovement : EnemyMovement
     private IEnumerator FollowRoutine(float aggressionModifier)
     {
         FindNewTarget();
+        damageBox.enabled = true;
         stateUnlocked = false;
         float originalSlowdownDistance = _astarAI.slowdownDistance;
         float originalEndReachedDistance = _astarAI.endReachedDistance;
@@ -98,9 +108,25 @@ public class BatEnemyMovement : EnemyMovement
         stateUnlocked = false;
         float originalRepathRate = _astarAI.repathRate;
         _astarAI.repathRate = attackRetargetingFrequency;
-        
+
         yield return new WaitForSeconds(_followDuration / aggressionModifier);
         stateUnlocked = true;
+        ChangeAttackState(aggressionModifier);
         _astarAI.repathRate = originalRepathRate;
+        damageBox.enabled = false;
+    }
+
+    public override void ReceiveKnockBack(Vector3 force)
+    {
+        if (gameObject.activeSelf)
+            StartCoroutine(KnockBackCoroutine(force, 2.5f / AggressionValue()));
+    }
+
+    private IEnumerator KnockBackCoroutine(Vector3 force, float duration)
+    {
+        _astarAI.enabled = false;
+        base.ReceiveKnockBack(force);
+        yield return new WaitForSeconds(duration);
+        _astarAI.enabled = hp.isAlive;
     }
 }

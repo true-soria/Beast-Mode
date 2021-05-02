@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34d6a92cdea8b024386a71de487cbcc1, type: 3}
   m_Name: PEDebug
   m_EditorClassIdentifier: 
-  maxHitPoints: 100
-  effectiveHitPoints: 0
-  hitPoints: 100
+  maxHitPoints: 20
+  hitPoints: 20
   damageResistance: 0
   jumpHeightMult: 1
   moveSpeedMult: 1
@@ -22,11 +21,11 @@ MonoBehaviour:
   extraDashes: 5
   wallClingTime: 5
   floatDuration: 5
-  slamPower: 0
-  slamEquipped: 0
   gravityScale: 1
   damageMult: 1
   fireRateMult: 1
   knockbackMult: 1
-  reflectCount: 0
+  reflectCount: 2
   canWallCling: 1
+  effectiveHitPoints: 0
+  slamEquipped: 0

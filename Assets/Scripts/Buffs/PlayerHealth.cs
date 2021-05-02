@@ -7,59 +7,74 @@ using UnityEngine.UI;
 public class PlayerHealth : MonoBehaviour
 {
     [HideInInspector] public PlayerEffects playerEffects;
-    public GameObject displayHealthPrefab;
 
     private GameObject _displayHealth;
     private Text _healthText;
-    // private CircleCollider2D _hurtbox;
-    private bool _iFramesActive;
 
+    private const float IFrameDuration = 2f;
+
+    [HideInInspector] public GameManager gameManager;
+    [HideInInspector] public bool invincible;
     [HideInInspector] public bool isAlive = true;
 
     private void Start()
     {
-        // _hurtbox = GetComponentInChildren<CircleCollider2D>();
-        if (displayHealthPrefab)
+        _displayHealth = Resources.Load("Prefabs/UI/DisplayHealth") as GameObject;
+        if (_displayHealth)
         {
-            _displayHealth = Instantiate(displayHealthPrefab);
+            _displayHealth = Instantiate(_displayHealth);
             _healthText = _displayHealth.GetComponentInChildren<Text>();
-            _healthText.text = $"HP: {playerEffects.hitPoints}";
+            DisplayHP();
         }
     }
 
     public void TakeDamage(int damage)
     {
-        if (!_iFramesActive)
-            playerEffects.hitPoints -= damage;
+        playerEffects.hitPoints -= invincible ? 0 : damage;
         if (playerEffects.hitPoints <= 0)
         {
-            isAlive = false;
-            if (_displayHealth)
-                _displayHealth.gameObject.SetActive(false);
+            gameManager.RespawnPlayer();
+            RecalculateHitPoints(true);
         }
-        _healthText.text = $"HP: {playerEffects.hitPoints}";
-
-        StartCoroutine(ActivateIFrames(2f));
+        
+        DisplayHP();
+        StartCoroutine(ActivateIFrames(IFrameDuration));
     }
 
     public IEnumerator ActivateIFrames(float duration)
     {
-        _iFramesActive = true;
+        invincible = true;
         yield return new WaitForSeconds(duration);
-        _iFramesActive = false;
+        invincible = playerEffects.damageResistance >= 100;
     }
 
     public void HealDamage(int heal)
     {
         playerEffects.hitPoints = Math.Min(heal + playerEffects.hitPoints, playerEffects.effectiveHitPoints);
+        DisplayHP();
     }
 
-    public void RecalculateHitPoints(bool setHpToMax)
+    public void RecalculateHitPoints(bool setHpToMax = false)
     {
-        float eHP = playerEffects.damageResistance >= 100 ? Mathf.Infinity : 100 / (100 - playerEffects.damageResistance);
-        playerEffects.effectiveHitPoints = Mathf.CeilToInt(playerEffects.maxHitPoints * eHP);
-        playerEffects.hitPoints = setHpToMax ? playerEffects.effectiveHitPoints : Mathf.CeilToInt(playerEffects.hitPoints * eHP);
+        if (playerEffects.damageResistance >= 100)
+        {
+            invincible = true;
+            if (setHpToMax) playerEffects.hitPoints = playerEffects.maxHitPoints;
+        }
+        else
+        {
+            invincible = false;
+            float eHP = 100 / (100 - playerEffects.damageResistance);
+            playerEffects.effectiveHitPoints = Mathf.CeilToInt(playerEffects.maxHitPoints * eHP);
+            playerEffects.hitPoints =
+                setHpToMax ? playerEffects.effectiveHitPoints : Mathf.CeilToInt(playerEffects.hitPoints * eHP);
+        }
+        DisplayHP();
+    }
+
+    private void DisplayHP()
+    {
         if (_healthText)
-            _healthText.text = $"HP: {playerEffects.hitPoints}";
+            _healthText.text = invincible ? "HP: ∞" : $"HP: {playerEffects.hitPoints}";
     }
 }

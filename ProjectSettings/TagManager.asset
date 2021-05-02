@@ -14,9 +14,12 @@ TagManager:
   - Ceiling
   - Enemy
   - PlayerHurtbox
-  - Pickup
   - Danger
-  - CameraBarrier
+  - PickupBuff
+  - PickupMask
+  - PickupAmmo
+  - Pickup
+  - Event
   layers:
   - Default
   - TransparentFX
@@ -53,6 +56,9 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Invisible Barrier
+    uniqueID: 3723560577
     locked: 0
   - name: Barrier
     uniqueID: 698314677

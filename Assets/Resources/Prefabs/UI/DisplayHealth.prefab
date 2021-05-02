@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 560488972435941844}
   - component: {fileID: 8877590826869746013}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: DisplayHealth
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -157,14 +157,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.8509804, g: 0.25490198, b: 0.11764706, a: 1}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 6d8187588de72a24789c3ec44d32d58e, type: 3}
+    m_Font: {fileID: 12800000, guid: bf9453688179417469c10edf2a125b19, type: 3}
     m_FontSize: 42
     m_FontStyle: 0
     m_BestFit: 0

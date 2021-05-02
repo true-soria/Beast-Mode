@@ -13,7 +13,6 @@ public class SlimeEnemyMovement : EnemyMovement
     
 
     private Vector2 _velocity = Vector2.zero;
-    private Rigidbody2D _body;
     private SpriteRenderer _spriteRenderer;
     private int _ticksPerLeap;
     private int _ticksSinceLastLeap;
@@ -22,7 +21,6 @@ public class SlimeEnemyMovement : EnemyMovement
     protected override void InitComponents()
     {
         base.InitComponents();
-        _body = gameObject.GetComponent<Rigidbody2D>();
         _spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
     }
 
@@ -32,7 +30,7 @@ public class SlimeEnemyMovement : EnemyMovement
         damageBox.enabled = false;
         stateUnlocked = true;
         attackState = AttackState.Stopped;
-        float aggressionModifier = 0.5f + globalAggression + baseAggression;
+        float aggressionModifier = AggressionValue();
         _ticksPerLeap = Mathf.FloorToInt((aggressionModifier - 1f) * 10);
         InvokeRepeating(nameof(UpdateVelocity), 3.5f / aggressionModifier, 1 / aggressionModifier);
     }
@@ -50,7 +48,7 @@ public class SlimeEnemyMovement : EnemyMovement
         {
             case AttackState.Wandering:
             case AttackState.Following:
-                _body.velocity = new Vector2(_velocity.x * Time.deltaTime, _body.velocity.y);
+                body.velocity = new Vector2(_velocity.x * Time.deltaTime, body.velocity.y);
                 break;
         }
     }
@@ -79,7 +77,7 @@ public class SlimeEnemyMovement : EnemyMovement
 
     private void UpdateVelocity()
     {
-        float aggressionModifier = 0.5f + globalAggression + baseAggression;
+        float aggressionModifier = AggressionValue();
         Vector2 toTarget;
         switch (attackState)
         {
@@ -127,11 +125,9 @@ public class SlimeEnemyMovement : EnemyMovement
         float maxDistance = leapRange / 3 * aggressionModifier;
         float leapX = 2f/3f * Mathf.Clamp(toTarget.x, -maxDistance, maxDistance);
         float leapY = Mathf.Clamp(toTarget.y, 1f, maxDistance);
-        _body.AddForce(new Vector2(leapX, leapY) * jumpHeightMult, ForceMode2D.Impulse);
-
-        yield return new WaitForSeconds(3f / aggressionModifier);
-        while (!_grounded)
-            yield return new WaitForSeconds(1f / aggressionModifier);
+        body.AddForce(new Vector2(leapX, leapY) * jumpHeightMult, ForceMode2D.Impulse);
+        
+        yield return new WaitUntil(() => _grounded);
         yield return new WaitForSeconds(1f / aggressionModifier);
         _spriteRenderer.color = Color.white;
         damageBox.enabled = false;

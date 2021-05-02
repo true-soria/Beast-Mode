@@ -58,7 +58,7 @@ GameObject:
   - component: {fileID: 4315040612786679244}
   - component: {fileID: 4315040612786679247}
   - component: {fileID: 4315040612786679235}
-  - component: {fileID: 4315040612786679234}
+  - component: {fileID: 3350135313251195479}
   - component: {fileID: 4315040612786679246}
   - component: {fileID: 8329375445255002355}
   - component: {fileID: 7778941712305257310}
@@ -122,7 +122,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1343489329
-  m_SortingLayer: 6
+  m_SortingLayer: 7
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: fb6e33f431fad1a4b81c478cc6016c0b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -152,12 +152,12 @@ Rigidbody2D:
   m_AngularDrag: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 0}
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
---- !u!61 &4315040612786679234
-BoxCollider2D:
+--- !u!70 &3350135313251195479
+CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -170,18 +170,8 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 0.64, y: 0.64}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 1
-  serializedVersion: 2
   m_Size: {x: 0.88, y: 1}
-  m_EdgeRadius: 0
+  m_Direction: 0
 --- !u!114 &4315040612786679246
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -203,6 +193,8 @@ MonoBehaviour:
   floatSpeed: -0.15
   slamGravityScale: 1.4
   slidingGravityScale: 1.4
+  restoreHurtboxDelay: 1
+  hurtBox: {fileID: 0}
   playerEffects: {fileID: 11400000, guid: 843e3294ead971b43aaccf5603f9c5be, type: 2}
   move: {x: 0, y: 0}
   aim: {x: 0, y: 0}
@@ -221,11 +213,10 @@ MonoBehaviour:
   movement: {fileID: 4315040612786679246}
   equippedMask: {fileID: 0}
   eyes: {fileID: 8216663481633160734, guid: 85acdbf95efe2224fa0ca7f4a2c53994, type: 3}
+  hurtbox: {fileID: 2564532920462142618}
   baseEffects: {fileID: 11400000, guid: 843e3294ead971b43aaccf5603f9c5be, type: 2}
-  maskPrefabs:
-  - {fileID: 4155140212848033155, guid: 15bf1a6b8ebf0f34294e2b84b967ed7c, type: 3}
-  - {fileID: 2946558584380703609, guid: d4a703cda1639904e9d02908789ed721, type: 3}
-  - {fileID: 4338548290887356655, guid: 0d848ed4adb06c34c820e42e1df58c18, type: 3}
+  baseAmmoPool: {fileID: 11400000, guid: 946ffe4a8b1d5c94b993b829d9e2b9ae, type: 2}
+  maskPrefabs: []
   displayHealthPrefab: {fileID: 6764151716055585546, guid: 934f6bc377b74f943870f277d58c343a,
     type: 3}
 --- !u!114 &7778941712305257310
@@ -240,7 +231,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e24b265afaeb044408f9c78824f3b6ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  camera: {fileID: 0}
+  pauseMenuPrefab: {fileID: 7749669755526676495, guid: aff149cd118a789439b0c0adc06c7f10,
+    type: 3}
+  playerCamera: {fileID: 0}
 --- !u!114 &2531866315083798361
 MonoBehaviour:
   m_ObjectHideFlags: 0

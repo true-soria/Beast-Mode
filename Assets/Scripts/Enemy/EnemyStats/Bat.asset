@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e0762644e511b34abd601104ea87b1f, type: 3}
   m_Name: Bat
   m_EditorClassIdentifier: 
-  maxHitPoints: 25
+  maxHitPoints: 15
   hitPoints: 0
-  damage: 5
+  damage: 1

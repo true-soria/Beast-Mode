@@ -15,7 +15,7 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private Button settingsButton;
     [SerializeField] private Button exitGameButton;
 
-    [SerializeField] private GameObject settingsMenuPrefab;
+    [SerializeField] private GameObject controlsMenuPrefab;
     [SerializeField] private GameObject quitMenuPrefab;
 
 
@@ -24,7 +24,7 @@ public class MainMenu : MonoBehaviour
 
     private void Awake()
     {
-        _settingsMenu = Instantiate(settingsMenuPrefab, transform);
+        _settingsMenu = Instantiate(controlsMenuPrefab, transform);
         _settingsMenu.SetActive(false);
         _quitMenu = Instantiate(quitMenuPrefab, transform);
         _quitMenu.SetActive(false);
@@ -32,17 +32,19 @@ public class MainMenu : MonoBehaviour
 
     private void Start()
     {
-        if (SaveSystem.GetBool("HelloWorld"))
-            levelSelectButton.interactable = true;
-        if (!string.IsNullOrEmpty(SaveSystem.GetString(ContinueString)))
-            continueButton.interactable = true;
+        // if (SaveSystem.GetBool("HelloWorld"))
+        //     levelSelectButton.interactable = true;
+        // if (!string.IsNullOrEmpty(SaveSystem.GetString(ContinueString)))
+        //     continueButton.interactable = true;
         
-        EventSystem.current.SetSelectedGameObject(continueButton.gameObject);
+        EventSystem.current.SetSelectedGameObject(newGameButton.gameObject);
+        newGameButton.Select();
+        newGameButton.OnSelect(null);
     }
 
     public void StartNewGame()
     {
-        SceneManager.LoadScene("HelloWorld");
+        SceneManager.LoadScene("SSH");
     }
 
     public void OpenSettings()

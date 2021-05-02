@@ -14,11 +14,10 @@ public class PlayerMovement : MonoBehaviour
     public float floatSpeed;
     public float slamGravityScale;
     public float slidingGravityScale;
+    public float restoreHurtboxDelay;
 
     private Rigidbody2D _body;
-    private SpriteRenderer _sprite;
-    private BoxCollider2D _collisionBox;
-    private CircleCollider2D _hurtBox;
+    private CapsuleCollider2D _collisionBox;
 
     private State _currentState = State.Air;
     private Vector3 _slideJump;
@@ -29,6 +28,10 @@ public class PlayerMovement : MonoBehaviour
     private float _moveSpeed;
     private float _jumpHeight;
 
+    private const float DropThroughPlatformTime = 0.75f;
+    private Collider2D _currentPlatform;
+
+    [HideInInspector] public bool intangible;
     [HideInInspector] public PlayerEffects playerEffects;
     [HideInInspector] public Vector2 move;
     [HideInInspector] public Vector2 aim;
@@ -48,9 +51,7 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         _body = GetComponent<Rigidbody2D>();
-        _sprite = GetComponent<SpriteRenderer>();
-        _collisionBox = GetComponent<BoxCollider2D>();
-        _hurtBox = GetComponentInChildren<CircleCollider2D>();
+        _collisionBox = GetComponent<CapsuleCollider2D>();
         RestoreJumps();
     }
 
@@ -65,6 +66,7 @@ public class PlayerMovement : MonoBehaviour
             case "Platform":
                 RestoreJumps();
                 _currentState = State.Platform;
+                _currentPlatform = other.collider;
                 break;
             case "Wall":
                 if (_clingTimeLeft > 0 && (_currentState == State.Air || _currentState == State.Floating))
@@ -88,20 +90,6 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void RestoreJumps()
-    {
-        _hurtBox.enabled = true;
-        _body.gravityScale = playerEffects.gravityScale;
-        _clingTimeLeft = playerEffects.wallClingTime;
-        _jumpsLeft = playerEffects.extraJumps;
-        _dashesLeft = playerEffects.extraDashes;
-        _floatTimeLeft = playerEffects.floatDuration;
-        _moveSpeed = baseMoveSpeed * playerEffects.moveSpeedMult;
-        _jumpHeight = baseJumpHeight * playerEffects.jumpHeightMult;
-    }
-    
-    
-    
     void OnCollisionExit2D(Collision2D other)
     {
         switch (other.collider.gameObject.tag)
@@ -113,7 +101,6 @@ public class PlayerMovement : MonoBehaviour
             case "Wall":
                 if (_currentState == State.Clinging)
                 {
-                    _clingTimeLeft = 0;
                     _body.gravityScale = playerEffects.gravityScale;
                     _currentState = State.Air;
                 }
@@ -121,9 +108,21 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+
+    private void RestoreJumps()
+    {
+        _body.gravityScale = playerEffects.gravityScale;
+        _clingTimeLeft = playerEffects.wallClingTime;
+        _jumpsLeft = playerEffects.extraJumps;
+        _dashesLeft = playerEffects.extraDashes;
+        _floatTimeLeft = playerEffects.floatDuration;
+        _moveSpeed = baseMoveSpeed * playerEffects.moveSpeedMult;
+        _jumpHeight = baseJumpHeight * playerEffects.jumpHeightMult;
+    }
+
     public void ActionJump()
     {
-        Debug.Log("State at ActionJump: " + _currentState);
+        // Debug.Log("State at ActionJump: " + _currentState);
         switch (_currentState)
         {
             case State.Air:
@@ -169,16 +168,21 @@ public class PlayerMovement : MonoBehaviour
                 _body.gravityScale = playerEffects.gravityScale;
                 break;
             case State.Clinging:
+                _currentState = State.Air;
                 _body.AddForce(aim * (_jumpHeight * wallKickMultiplier), ForceMode2D.Impulse);
+                _body.gravityScale = playerEffects.gravityScale;
                 break;
         }
     }
 
     IEnumerator DropThroughPlatform()
     {
-        _collisionBox.enabled = false;
-        yield return new WaitForSeconds(0.2f);
-        _collisionBox.enabled = true;
+        if(_currentPlatform)
+        {
+            Physics2D.IgnoreCollision(_collisionBox, _currentPlatform);
+            yield return new WaitForSeconds(DropThroughPlatformTime);
+            Physics2D.IgnoreCollision(_collisionBox, _currentPlatform, false);
+        }
     }
 
     public void ActionLeftDash()
@@ -236,16 +240,24 @@ public class PlayerMovement : MonoBehaviour
                 case 2:
                     _currentState = State.Slamming;
                     _body.velocity = Vector2.zero;
-                    _hurtBox.enabled = false;
+                    StartCoroutine(SlamSuspendHurtbox(restoreHurtboxDelay));
                     break;
                 case 3:
                     _currentState = State.Slamming;
                     _body.AddForce(Vector2.up * (_jumpHeight / 1.5f), ForceMode2D.Impulse);
                     _body.gravityScale *= slamGravityScale;
-                    _hurtBox.enabled = false;
+                    StartCoroutine(SlamSuspendHurtbox(restoreHurtboxDelay));
                     break;
             }
         }
+    }
+    
+    private IEnumerator SlamSuspendHurtbox(float delay)
+    {
+        intangible = true;
+        yield return new WaitUntil(() => _currentState == State.Grounded);
+        yield return new WaitForSeconds(delay);
+        intangible = false;
     }
 
     private void FixedUpdate()

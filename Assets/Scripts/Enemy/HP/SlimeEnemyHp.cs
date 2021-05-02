@@ -5,8 +5,5 @@ using UnityEngine;
 
 public class SlimeEnemyHp : EnemyHP
 {
-    public override void TakeDamage(int damage)
-    {
-        base.TakeDamage(damage);
-    }
+    
 }

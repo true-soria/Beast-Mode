@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e0762644e511b34abd601104ea87b1f, type: 3}
   m_Name: Slime
   m_EditorClassIdentifier: 
-  maxHitPoints: 50
+  maxHitPoints: 25
   hitPoints: 0
-  damage: 10
+  damage: 2
