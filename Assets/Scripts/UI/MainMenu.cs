@@ -15,19 +15,25 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private Button settingsButton;
     [SerializeField] private Button exitGameButton;
 
+    [SerializeField] private GameObject levelSelectMenuPrefab;
     [SerializeField] private GameObject controlsMenuPrefab;
     [SerializeField] private GameObject quitMenuPrefab;
 
-
-    private GameObject _settingsMenu;
+    private GameObject _levelSelectMenu;
+    private GameObject _controlsMenu;
     private GameObject _quitMenu;
 
     private void Awake()
     {
-        _settingsMenu = Instantiate(controlsMenuPrefab, transform);
-        _settingsMenu.SetActive(false);
+        _levelSelectMenu = Instantiate(levelSelectMenuPrefab, transform);
+        _levelSelectMenu.SetActive(false);
+        _controlsMenu = Instantiate(controlsMenuPrefab, transform);
+        _controlsMenu.SetActive(false);
         _quitMenu = Instantiate(quitMenuPrefab, transform);
         _quitMenu.SetActive(false);
+#if UNITY_WEBGL
+        exitGameButton.interactable = false;
+#endif
     }
 
     private void Start()
@@ -47,9 +53,14 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadScene("SSH");
     }
 
+    public void LevelSelect()
+    {
+        _levelSelectMenu.SetActive(true);
+    }
+
     public void OpenSettings()
     {
-        _settingsMenu.SetActive(true);
+        _controlsMenu.SetActive(true);
     }
 
     public void OpenQuitMenu()

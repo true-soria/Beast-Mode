@@ -109,7 +109,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
 
-    private void RestoreJumps()
+    public void RestoreJumps()
     {
         _body.gravityScale = playerEffects.gravityScale;
         _clingTimeLeft = playerEffects.wallClingTime;

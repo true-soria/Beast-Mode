@@ -119,24 +119,27 @@ public abstract class Mask : MonoBehaviour
 
     protected int RemainingAmmo()
     {
-        switch (slot)
+        if (ammo)
         {
-            case WeaponSlot.Right1:
-            case WeaponSlot.Right2:
-            case WeaponSlot.Right3:
-                return ammo.rightAmmo;
-            case WeaponSlot.Left1:
-            case WeaponSlot.Left2:
-            case WeaponSlot.Left3:
-                return ammo.leftAmmo;
-            case WeaponSlot.Up1:
-            case WeaponSlot.Up2:
-            case WeaponSlot.Up3:
-                return ammo.upAmmo;
-            case WeaponSlot.Down1:
-            case WeaponSlot.Down2:
-            case WeaponSlot.Down3:
-                return ammo.downAmmo;
+            switch (slot)
+            {
+                case WeaponSlot.Right1:
+                case WeaponSlot.Right2:
+                case WeaponSlot.Right3:
+                    return ammo.rightAmmo;
+                case WeaponSlot.Left1:
+                case WeaponSlot.Left2:
+                case WeaponSlot.Left3:
+                    return ammo.leftAmmo;
+                case WeaponSlot.Up1:
+                case WeaponSlot.Up2:
+                case WeaponSlot.Up3:
+                    return ammo.upAmmo;
+                case WeaponSlot.Down1:
+                case WeaponSlot.Down2:
+                case WeaponSlot.Down3:
+                    return ammo.downAmmo;
+            }
         }
         return 0;
     }

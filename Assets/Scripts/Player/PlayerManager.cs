@@ -212,6 +212,7 @@ public class PlayerManager : MonoBehaviour
             }
         }
         spawnedMask.gameObject.SetActive(false);
+        movement.RestoreJumps();
 
         if (equipImmediately) EquipNewMask((directionIndex, maskIndex));
     }

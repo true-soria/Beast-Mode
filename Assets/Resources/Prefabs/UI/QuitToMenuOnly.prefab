@@ -152,9 +152,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Quit to Menu
-
-'
+  m_Text: Quit to Menu
 --- !u!1 &1528998415689847411
 GameObject:
   m_ObjectHideFlags: 0

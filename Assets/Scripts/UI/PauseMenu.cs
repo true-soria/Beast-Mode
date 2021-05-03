@@ -9,14 +9,35 @@ using UnityEngine.UI;
 public class PauseMenu : MonoBehaviour
 {
     [SerializeField] private Button continueButton;
-    [SerializeField] private GameObject controlsMenu;
-    [SerializeField] private GameObject quitMenu;
-    [SerializeField] private GameObject settingsMenu;
+    [SerializeField] private GameObject settingsMenuPrefab;
+    [SerializeField] private GameObject controlsMenuPrefab;
+    [SerializeField] private GameObject quitMenuPrefab;
+    [SerializeField] private GameObject quitToMenuOnlyPrefab;
 
     [HideInInspector] public PlayerInput playerInput;
     private string _currentActionMap;
+    private GameObject _settingsMenu;
+    private GameObject _controlsMenu;
+    private GameObject _quitMenu;
+
     private const string MenuActionMap = "Menus";
 
+
+    private void Awake()
+    {
+#if UNITY_WEBGL
+        _quitMenu = Instantiate(quitToMenuOnlyPrefab, transform);
+        _quitMenu.SetActive(false);
+#else
+        _quitMenu = Instantiate(quitMenuPrefab, transform);
+        _quitMenu.SetActive(false);
+#endif
+        _settingsMenu = Instantiate(settingsMenuPrefab, transform);
+        _settingsMenu.SetActive(false);
+        _controlsMenu = Instantiate(controlsMenuPrefab, transform);
+        _controlsMenu.SetActive(false);
+        
+    }
 
     private void Start()
     {
@@ -28,7 +49,7 @@ public class PauseMenu : MonoBehaviour
         if (playerInput)
         {
             _currentActionMap = playerInput.currentActionMap.name;
-            playerInput.SwitchCurrentActionMap("Menus");
+            playerInput.SwitchCurrentActionMap(MenuActionMap);
         }
         EventSystem.current.SetSelectedGameObject(continueButton.gameObject);
         continueButton.Select();
@@ -50,16 +71,16 @@ public class PauseMenu : MonoBehaviour
 
     public void OpenControls()
     {
-        controlsMenu.SetActive(true);
+        _controlsMenu.SetActive(true);
     }
     
     public void OpenSettings()
     {
-        settingsMenu.SetActive(true);
+        _settingsMenu.SetActive(true);
     }
 
     public void OpenQuitMenu()
     {
-        quitMenu.SetActive(true);
+        _quitMenu.SetActive(true);
     }
 }
